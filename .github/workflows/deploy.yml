@@ -3,7 +3,7 @@ name: Deploy Flask App to GCP VM
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   deploy:
