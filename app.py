@@ -1,87 +1,144 @@
-from flask import Flask, render_template, request, redirect, flash
-from database.mongo import students
+from flask import Flask, render_template, request, redirect, session, url_for
+from database.mongo import employees
 from bson.objectid import ObjectId
-import os
 
 app = Flask(__name__)
-app.secret_key = "studentcrudproject"
+app.secret_key = "admin123"
 
 
+# ==========================
+# Employee Registration Page
+# ==========================
 @app.route("/")
 def home():
+    return render_template("index.html")
 
-    print("=" * 50)
-    print("APP FILE :", __file__)
-    print("CURRENT DIR :", os.getcwd())
-    print("TEMPLATE PATH :", app.template_folder)
-    print("INDEX EXISTS :", os.path.exists("templates/index.html"))
-    print("=" * 50)
 
-    data = list(students.find())
-    total = students.count_documents({})
+# ==========================
+# Save Employee
+# ==========================
+@app.route("/add", methods=["POST"])
+def add_employee():
+
+    employees.insert_one({
+        "name": request.form["name"],
+        "father_name": request.form["father_name"],
+        "mobile": request.form["mobile"],
+        "email": request.form["email"],
+        "qualification": request.form["qualification"],
+        "address": request.form["address"]
+    })
+
+    return redirect("/")
+
+
+# ==========================
+# Admin Login Page
+# ==========================
+@app.route("/admin")
+def admin():
+
+    return render_template("admin_login.html")
+
+
+# ==========================
+# Login
+# ==========================
+@app.route("/login", methods=["POST"])
+def login():
+
+    username = request.form["username"]
+    password = request.form["password"]
+
+    if username == "admin" and password == "admin123":
+        session["admin"] = True
+        return redirect("/dashboard")
+
+    return "Invalid Username or Password"
+
+
+# ==========================
+# Dashboard
+# ==========================
+@app.route("/dashboard")
+def dashboard():
+
+    if "admin" not in session:
+        return redirect("/admin")
+
+    data = employees.find()
 
     return render_template(
-        "index.html",
-        students=data,
-        total=total
+        "dashboard.html",
+        employees=data,
+        total=employees.count_documents({})
     )
 
 
-@app.route("/add", methods=["POST"])
-def add():
-
-    print(request.form)
-
-    students.insert_one({
-        "name": request.form.get("name"),
-        "email": request.form.get("email"),
-        "city": request.form.get("city"),
-        "phone": request.form.get("phone")
-    })
-
-    flash("Student Added Successfully", "success")
-    return redirect("/")
-
-
+# ==========================
+# Delete Employee
+# ==========================
 @app.route("/delete/<id>")
 def delete(id):
 
-    students.delete_one({
-        "_id": ObjectId(id)
-    })
+    if "admin" not in session:
+        return redirect("/admin")
 
-    flash("Student Deleted Successfully", "danger")
-    return redirect("/")
+    employees.delete_one({"_id": ObjectId(id)})
+
+    return redirect("/dashboard")
 
 
+# ==========================
+# Edit Employee
+# ==========================
 @app.route("/edit/<id>")
 def edit(id):
 
-    student = students.find_one({
-        "_id": ObjectId(id)
-    })
+    if "admin" not in session:
+        return redirect("/admin")
 
-    return render_template("edit.html", student=student)
+    employee = employees.find_one({"_id": ObjectId(id)})
+
+    return render_template("edit.html", employee=employee)
 
 
+# ==========================
+# Update Employee
+# ==========================
 @app.route("/update/<id>", methods=["POST"])
 def update(id):
 
-    students.update_one(
+    if "admin" not in session:
+        return redirect("/admin")
+
+    employees.update_one(
         {"_id": ObjectId(id)},
         {
             "$set": {
-                "name": request.form.get("name"),
-                "email": request.form.get("email"),
-                "city": request.form.get("city"),
-                "phone": request.form.get("phone")
+                "name": request.form["name"],
+                "father_name": request.form["father_name"],
+                "mobile": request.form["mobile"],
+                "email": request.form["email"],
+                "qualification": request.form["qualification"],
+                "address": request.form["address"]
             }
         }
     )
 
-    flash("Student Updated Successfully", "primary")
-    return redirect("/")
+    return redirect("/dashboard")
+
+
+# ==========================
+# Logout
+# ==========================
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/admin")
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)

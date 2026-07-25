@@ -5,4 +5,4 @@ client = MongoClient(MONGO_URI)
 
 db = client[DATABASE]
 
-students = db.students
+employees = db.employees
