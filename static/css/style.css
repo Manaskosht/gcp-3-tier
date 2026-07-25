@@ -1,64 +1,46 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+body {
+    background: url("https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1920&q=80")
+        no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-body{
-    min-height:100vh;
-    background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#4facfe);
-    background-size:400% 400%;
-    animation:bg 12s ease infinite;
+.overlay {
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-@keyframes bg{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+.card {
+    width: 700px;
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    box-shadow: 0 0 30px rgba(0,255,255,0.4);
 }
 
-.navbar{
-    background:rgba(0,0,0,.35);
-    backdrop-filter:blur(12px);
+.form-control {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
-.glass-card{
-    background:rgba(255,255,255,.15);
-    backdrop-filter:blur(18px);
-    border-radius:20px;
-    color:white;
+.form-control::placeholder {
+    color: #ddd;
 }
 
-.form-control{
-    background:rgba(255,255,255,.15);
-    border:none;
-    color:white;
+.btn-primary {
+    background: linear-gradient(90deg,#00c6ff,#0072ff);
+    border: none;
+    font-weight: bold;
 }
 
-.form-control::placeholder{
-    color:#ddd;
-}
-
-.form-control:focus{
-    background:rgba(255,255,255,.25);
-    color:white;
-    box-shadow:none;
-}
-
-.btn{
-    border-radius:10px;
-}
-
-.table{
-    background:transparent;
-    color:white;
-}
-
-.table-dark{
-    background:#0d6efd;
-}
-
-footer{
-    color:white;
+h2 {
+    color: cyan;
+    text-align: center;
+    font-weight: bold;
 }
