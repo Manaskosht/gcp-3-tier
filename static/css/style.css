@@ -1,4 +1,3 @@
-HEAD
 *{
     margin:0;
     padding:0;
@@ -360,7 +359,6 @@ body {
 
 }
 
-nano static/css/style.css
 /* Heading */
 h2 {
 
@@ -373,4 +371,3 @@ h2 {
     text-shadow: 0 0 10px cyan;
 
 }
-ae93740 (Updated AI UI)
